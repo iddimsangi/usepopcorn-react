@@ -54,7 +54,7 @@ const tempMovieData = [
       "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
   },
 ];
-
+const KEY = "cb0e6f6d";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const[selectedId, setSelectedId]=useState(null);
@@ -67,12 +67,32 @@ export default function App() {
 const selectIdHandler = (id) => {
   setSelectedId((selectedId) => id === selectedId ? null : id);
 }
+
+const [query, setQuery] = useState("");
+useEffect(() => {
+  const fetchMovies = async() => {
+    try {
+      const results = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
+
+      if (!results.ok) {
+        throw new Error("There is something wrong on fetching movies");
+      }
+      const data = await results.json();
+      console.log(data.Search);
+      addMoviesHandler(data.Search)
+    } catch (error) {
+      console.log(error);
+    }
+   
+  }
+  fetchMovies()
+}, [query])
 console.log(selectedId);
   return (
     <>
       <NavHeader>
         <Logo />
-        <Search addMoviesHandler={addMoviesHandler} />
+        <Search query={query} setQuery={setQuery}  addMoviesHandler={addMoviesHandler} />
         <MoviesResults movies={movies} />
       </NavHeader>
       <Main>
