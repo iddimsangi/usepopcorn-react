@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react"
 import StarRating from "./StarRating";
 import Loader from "./Loader";
-function MovieDetails({selectedId, KEY, onCloseWatch}) {
+function MovieDetails({selectedId, KEY, onCloseDetails, onAddWatched,watched}) {
     const[selectedMovie, setSelectedMovie] = useState({});
     const[isLoading, setIsLoading] = useState(false);
+    const[userRating, setUserRating] = useState(null);
+
+    const isWatched = watched.map((movie) => movie.id === selectedId);
+    console.log(isWatched);
     const{
         Poster,
         Title,
@@ -13,6 +17,20 @@ function MovieDetails({selectedId, KEY, onCloseWatch}) {
         imdbRating,
 
     }=selectedMovie;
+    const userRatingHandler = (rate) => {
+        setUserRating(rate);
+    }
+    const onAddWatchedHandler = () =>{
+        const newWatched = {
+            Poster,
+            Title,
+            Runtime,
+            userRating,
+            imdbRating,
+        }
+        onAddWatched(newWatched);
+        onCloseDetails();
+    }
     useEffect(() => {
         const fetchSelected = async() => {
             setIsLoading(true);
@@ -26,7 +44,7 @@ function MovieDetails({selectedId, KEY, onCloseWatch}) {
     console.log(selectedMovie);
     return (
      <section className="details_wrap">
-     <span onClick={() => onCloseWatch()} className="btn-back">&larr;</span>
+     <span onClick={() => onCloseDetails()} className="btn-back">&larr;</span>
      {/* <p>`Selected Movie Details ID ${selectedId}`</p> */}
      <div className="detail_cont">
          <img src={`${Poster}`} alt="movie photo" className="img"/>
@@ -38,8 +56,8 @@ function MovieDetails({selectedId, KEY, onCloseWatch}) {
          </div>
      </div>
     <div className="rating">
-    <StarRating maxRatings={10}/>
-    <button className="btn-add">+ Add</button>
+    <StarRating userRatingHandler={userRatingHandler} maxRatings={10}/>
+   {userRating && <button onClick={onAddWatchedHandler} className="btn-add">+ Add</button>}
     </div>
  </section>
     )

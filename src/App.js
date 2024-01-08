@@ -59,7 +59,7 @@ const KEY = "cb0e6f6d";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const[selectedId, setSelectedId]=useState(null);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
   const [query, setQuery] = useState("");
   const addMoviesHandler = (receivedMovies) => {
     setMovies(receivedMovies);
@@ -69,10 +69,12 @@ const selectIdHandler = (id) => {
   setSelectedId((selectedId) => id === selectedId ? null : id);
 }
 
-const onCloseWatch = () => {
+const onCloseDetails = () => {
   setSelectedId(null);
 }
-
+const onAddWatched = (watchedMovie) => {
+  setWatched((watched) => [watchedMovie, ...watched])
+}
 useEffect(() => {
   const fetchMovies = async() => {
     try {
@@ -104,7 +106,7 @@ console.log(selectedId);
           <MoviesList movies={movies} selectIdHandler={selectIdHandler} />
         </MoviesBox>
         <MoviesBox>
-       {selectedId ? <MovieDetails onCloseWatch={onCloseWatch} KEY={KEY} selectedId={selectedId}/>:
+       {selectedId ? <MovieDetails onAddWatched={onAddWatched} watched={watched} onCloseDetails={onCloseDetails} KEY={KEY} selectedId={selectedId}/>:
          <>
           <MoviesSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
