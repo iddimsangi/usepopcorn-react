@@ -8,6 +8,7 @@ import MoviesResults from "./MoviesResults";
 import MoviesList from "./MoviesList";
 import MoviesSummary from "./MoviesSummary";
 import WatchedMoviesList from "./WatchedMoviesList";
+import MovieDetails from "./MovieDetails";
 
 const tempWatchedData = [
   {
@@ -59,7 +60,7 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const[selectedId, setSelectedId]=useState(null);
   const [watched, setWatched] = useState(tempWatchedData);
-
+  const [query, setQuery] = useState("");
   const addMoviesHandler = (receivedMovies) => {
     setMovies(receivedMovies);
   }
@@ -68,7 +69,7 @@ const selectIdHandler = (id) => {
   setSelectedId((selectedId) => id === selectedId ? null : id);
 }
 
-const [query, setQuery] = useState("");
+
 useEffect(() => {
   const fetchMovies = async() => {
     try {
@@ -100,8 +101,11 @@ console.log(selectedId);
           <MoviesList movies={movies} selectIdHandler={selectIdHandler} />
         </MoviesBox>
         <MoviesBox>
+       {selectedId ? <MovieDetails KEY={KEY} selectedId={selectedId}/>:
+         <>
           <MoviesSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
+         </>}
         </MoviesBox>
       </Main>
     </>

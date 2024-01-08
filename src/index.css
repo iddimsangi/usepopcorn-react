@@ -338,7 +338,16 @@ body {
   align-items: center;
   justify-content: center;
 }
-
+.StarRating{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:10px;
+  border: 1px solid gray;
+}
+.textstyle{
+  font-size: 1.6rem;
+}
 /*
 SPACING SYSTEM (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128
