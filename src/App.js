@@ -69,6 +69,9 @@ const selectIdHandler = (id) => {
   setSelectedId((selectedId) => id === selectedId ? null : id);
 }
 
+const onCloseWatch = () => {
+  setSelectedId(null);
+}
 
 useEffect(() => {
   const fetchMovies = async() => {
@@ -101,7 +104,7 @@ console.log(selectedId);
           <MoviesList movies={movies} selectIdHandler={selectIdHandler} />
         </MoviesBox>
         <MoviesBox>
-       {selectedId ? <MovieDetails KEY={KEY} selectedId={selectedId}/>:
+       {selectedId ? <MovieDetails onCloseWatch={onCloseWatch} KEY={KEY} selectedId={selectedId}/>:
          <>
           <MoviesSummary watched={watched} />
           <WatchedMoviesList watched={watched} />
