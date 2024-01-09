@@ -33,11 +33,16 @@ function MovieDetails({selectedId, KEY, onCloseDetails, onAddWatched,watched}) {
     }
     useEffect(() => {
         const fetchSelected = async() => {
+            try {
             setIsLoading(true);
             const resp = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`);
             const selectData = await resp.json();
             setSelectedMovie(selectData);
+            setIsLoading(false)
             console.log(selectData);
+            } catch (error) {
+                
+            }
         }
         fetchSelected();
     },[selectedId]);
@@ -47,7 +52,7 @@ function MovieDetails({selectedId, KEY, onCloseDetails, onAddWatched,watched}) {
      <span onClick={() => onCloseDetails()} className="btn-back">&larr;</span>
      {/* <p>`Selected Movie Details ID ${selectedId}`</p> */}
      <div className="detail_cont">
-         <img src={`${Poster}`} alt="movie photo" className="img"/>
+        {isLoading ? <Loader/> : <img src={`${Poster}`} alt="movie photo" className="img"/>}
          <div className="details-overview">
              <h2>{Title}</h2>
              <h3>{`${Released} ${Runtime}`}</h3>

@@ -9,6 +9,7 @@ import MoviesList from "./MoviesList";
 import MoviesSummary from "./MoviesSummary";
 import WatchedMoviesList from "./WatchedMoviesList";
 import MovieDetails from "./MovieDetails";
+import Loader from "./Loader";
 
 const tempWatchedData = [
   {
@@ -60,7 +61,9 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const[selectedId, setSelectedId]=useState(null);
   const [watched, setWatched] = useState([]);
+  const[isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const[error, setError] = useState("");
   const addMoviesHandler = (receivedMovies) => {
     setMovies(receivedMovies);
   }
@@ -78,6 +81,8 @@ const onAddWatched = (watchedMovie) => {
 useEffect(() => {
   const fetchMovies = async() => {
     try {
+      setError("")
+      setIsLoading(true);
       const results = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
 
       if (!results.ok) {
@@ -85,8 +90,10 @@ useEffect(() => {
       }
       const data = await results.json();
       console.log(data.Search);
+      setIsLoading(false);
       addMoviesHandler(data.Search)
     } catch (error) {
+      setError(error.message);
       console.log(error);
     }
    
@@ -103,7 +110,8 @@ console.log(selectedId);
       </NavHeader>
       <Main>
         <MoviesBox>
-          <MoviesList movies={movies} selectIdHandler={selectIdHandler} />
+          {isLoading && <Loader/>}
+          {!isLoading && !error &&(<MoviesList movies={movies} selectIdHandler={selectIdHandler} />)}
         </MoviesBox>
         <MoviesBox>
        {selectedId ? <MovieDetails onAddWatched={onAddWatched} watched={watched} onCloseDetails={onCloseDetails} KEY={KEY} selectedId={selectedId}/>:
