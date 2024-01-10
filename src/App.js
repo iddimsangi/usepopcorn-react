@@ -60,7 +60,10 @@ const KEY = "cb0e6f6d";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const[selectedId, setSelectedId]=useState(null);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() =>{
+    const storedWatched = localStorage.getItem("watched");
+    return JSON.parse(storedWatched);
+  });
   const[isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
   const[error, setError] = useState("");
@@ -78,6 +81,9 @@ const onCloseDetails = () => {
 const onAddWatched = (watchedMovie) => {
   setWatched((watched) => [watchedMovie, ...watched])
 }
+useEffect(() => {
+  localStorage.setItem("watched", JSON.stringify(watched));
+},[watched]);
 useEffect(() => {
   const fetchMovies = async() => {
     try {
